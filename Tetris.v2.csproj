@@ -285,6 +285,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scipts\Block.cs" />
+    <Compile Include="Assets\Scipts\BlockController.cs" />
+    <Compile Include="Assets\Scipts\BlockShape.cs" />
     <Compile Include="Assets\Scipts\MainBlockController.cs" />
     <Compile Include="Assets\Scipts\MainBlockSpawner.cs" />
   </ItemGroup>
