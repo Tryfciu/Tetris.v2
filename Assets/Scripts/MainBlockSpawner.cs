@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class MainBlockSpawner : MonoBehaviour
 {
-    public bool isMainShapeAlive = false;
-    public bool[,] isOcupiedNetScheme = new bool[9, 16];
+    bool isMainShapeAlive = false;
+    bool[,] isOcupiedNetScheme = new bool[9, 16];
+    List<Block> allPlacedBlocks = new List<Block>();
     BlockShape currentShape;
     float timeFromLastMoveDown = 0;
-    float fallingSpeedInSeconds = 0.1f;
-
+    float fallingSpeedInSeconds = 0.4f;
 	
 	void Update ()
     {
@@ -25,16 +25,20 @@ public class MainBlockSpawner : MonoBehaviour
         else
         {
             DeactivateCurrentShape();
-            //ClearFullrows();
+            ClearFullRows();
         }
 
         ShapeControl();
 
 	}
 
+    int testIterator = 1; //TEST
+
     void RenderNewShape()
     {
         currentShape = new BlockShape();
+        //currentShape = new BlockShape(testIterator); //TEST
+        testIterator = testIterator == 1? 2 : 1; //TEST
 
         foreach (Block block in currentShape.blocks)
         {
@@ -99,6 +103,7 @@ public class MainBlockSpawner : MonoBehaviour
             }
 
             isOcupiedNetScheme[block.position[0], block.position[1]] = true;
+            allPlacedBlocks.Add(block);
         }
 
         isMainShapeAlive = false;
@@ -108,11 +113,15 @@ public class MainBlockSpawner : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.LeftArrow) == true && CurrentShapeCanMoveAside("left"))
         {
-            moveShapeAside("left");
+            MoveShapeAside("left");
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow) == true && CurrentShapeCanMoveAside("right"))
         {
-            moveShapeAside("right");
+            MoveShapeAside("right");
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow) == true && IsPossibleToMoveShapeDown())
+        {
+            MoveShapeToOneLowerPosition();
         }
     }
 
@@ -137,7 +146,7 @@ public class MainBlockSpawner : MonoBehaviour
         return true;
     }
 
-    void moveShapeAside(string side)
+    void MoveShapeAside(string side)
     {
         int sideIndicator = 1;
 
@@ -158,24 +167,52 @@ public class MainBlockSpawner : MonoBehaviour
         Application.Quit();
     }
 
-    //void ClearFullRows()
-    //{
-    //    foreach (Block block in currentShape.blocks)
-    //    {
-    //        CheckIfRowIsFull(block.position[1]);
-    //    }
-    //}
+    void ClearFullRows()
+    {
+        foreach (Block block in currentShape.blocks)
+        {
+            if(CheckIfRowIsFull(block.position[1]))
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    isOcupiedNetScheme[i, block.position[1]] = false;
+                }
 
+                foreach (Block blockToDestroy in allPlacedBlocks.FindAll(n => n.position[1] == block.position[1]))
+                {
+                    Destroy(blockToDestroy.gameObjectBlock);
+                }
+                allPlacedBlocks.RemoveAll(n => n.position[1] == block.position[1]);
+                DescentRowAfterClearing(block.position[1]);
+            }
+        }
+    }
 
-    // bool CheckIfRowIsFull(int row)
-    //{
-    //    for (int i = 0; i < 9; i++)
-    //    {
-    //        if(!isOcupiedNetScheme[row, i])
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //    return true;
-    //}
+    bool CheckIfRowIsFull(int row)
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            if (!isOcupiedNetScheme[i, row])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void DescentRowAfterClearing(int indexOfClearedRow)
+    {
+        allPlacedBlocks.Sort((a, b) => a.position[1].CompareTo(b.position[1]));
+
+        foreach (Block block in allPlacedBlocks)
+        {
+            if(block.position[1] > indexOfClearedRow)
+            {
+                isOcupiedNetScheme[block.position[0], block.position[1]] = false;
+                block.position[1] -= 1;
+                isOcupiedNetScheme[block.position[0], block.position[1]] = true;
+                SetPositionOfBlock(block);
+            }
+        }
+    }
 }

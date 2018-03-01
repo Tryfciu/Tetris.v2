@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -285,11 +287,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scipts\Block.cs" />
-    <Compile Include="Assets\Scipts\BlockController.cs" />
-    <Compile Include="Assets\Scipts\BlockShape.cs" />
-    <Compile Include="Assets\Scipts\MainBlockController.cs" />
-    <Compile Include="Assets\Scipts\MainBlockSpawner.cs" />
+    <Compile Include="Assets\Scripts\Block.cs" />
+    <Compile Include="Assets\Scripts\BlockController.cs" />
+    <Compile Include="Assets\Scripts\BlockShape.cs" />
+    <Compile Include="Assets\Scripts\MainBlockSpawner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
